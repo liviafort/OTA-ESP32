@@ -12,22 +12,31 @@ export class CredentialsController {
 
   @Get()
   async getCredentials() {
-    return this.wifiRepo.findOne({ where: { id: 1 } }) || {
-      ssid: 'iPhone de joão',
-      password: 'jvssenha'
-    };
+    try {
+      const credentials = await this.wifiRepo.findOne({ where: { id: 1 } });
+      return credentials || {
+        ssid: 'iPhone de João',
+        password: 'jvssenha'
+      };
+    } catch (error) {
+      return { message: 'Erro ao acessar o banco de dados', error };
+    }
   }
 
   @Post()
   async updateCredentials(@Body() newCredentials: WifiCredentials) {
-    const existing = await this.wifiRepo.findOne({ where: { id: 1 } });
-    
-    if (existing) {
-      await this.wifiRepo.update(1, newCredentials);
-    } else {
-      await this.wifiRepo.insert({ ...newCredentials, id: 1 });
-    }
+    try {
+      const existing = await this.wifiRepo.findOne({ where: { id: 1 } });
 
-    return await this.wifiRepo.findOne({ where: { id: 1 } });
+      if (existing) {
+        await this.wifiRepo.update(1, newCredentials);
+      } else {
+        await this.wifiRepo.insert({ ...newCredentials, id: 1 });
+      }
+
+      return await this.wifiRepo.findOne({ where: { id: 1 } });
+    } catch (error) {
+      return { message: 'Erro ao atualizar as credenciais', error };
+    }
   }
 }

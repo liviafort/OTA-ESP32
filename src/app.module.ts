@@ -9,7 +9,7 @@ import { WifiCredentials } from './credentials/wifi-credentials.entity';
   imports: [
     TypeOrmModule.forRoot({
       type: 'sqlite',
-      database: '/tmp/wifi.db',
+      database: 'app/tmp/wifi.db',
       entities: [WifiCredentials],
       synchronize: true,
     }),
