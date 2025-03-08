@@ -7,13 +7,20 @@ import { WifiCredentials } from './credentials/wifi-credentials.entity';
 
 @Module({
   imports: [
-      TypeOrmModule.forRoot({
-        type: 'postgres',
-        url: process.env.DATABASE_URL,
-        ssl: { rejectUnauthorized: false },
-        synchronize: true,
-        entities: [WifiCredentials],
-      }),
+    TypeOrmModule.forRoot({
+      type: 'postgres',
+      url: process.env.DATABASE_URL,
+      ssl: true, 
+      extra: {
+        ssl: {
+          rejectUnauthorized: false,
+        },
+      },
+      entities: [WifiCredentials],
+      synchronize: true, 
+      retryDelay: 3000, 
+      retryAttempts: 5, 
+    }),
       TypeOrmModule.forFeature([WifiCredentials])
   ],
   controllers: [AppController, CredentialsController],
