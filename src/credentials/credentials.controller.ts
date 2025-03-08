@@ -1,42 +1,24 @@
 import { Controller, Get, Post, Body } from '@nestjs/common';
-import { WifiCredentials } from './wifi-credentials.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { Wifi } from './wifi-credentials.entity';
 
 @Controller('wifi')
-export class CredentialsController {
+export class WifiController {
   constructor(
-    @InjectRepository(WifiCredentials)
-    private readonly wifiRepo: Repository<WifiCredentials>,
+    @InjectRepository(Wifi)
+    private readonly wifiRepo: Repository<Wifi>,
   ) {}
 
   @Get()
-  async getCredentials() {
-    try {
-      const credentials = await this.wifiRepo.findOne({ where: { id: 1 } });
-      return credentials || {
-        ssid: 'iPhone de João',
-        password: 'jvssenha'
-      };
-    } catch (error) {
-      return { message: 'Erro ao acessar o banco de dados', error };
-    }
+  async get() {
+    const wifi = await this.wifiRepo.findOne({ where: { id: 1 } });
+    return wifi || { ssid: 'DefaultSSID', password: 'defaultPassword' };
   }
 
   @Post()
-  async updateCredentials(@Body() newCredentials: WifiCredentials) {
-    try {
-      const existing = await this.wifiRepo.findOne({ where: { id: 1 } });
-
-      if (existing) {
-        await this.wifiRepo.update(1, newCredentials);
-      } else {
-        await this.wifiRepo.insert({ ...newCredentials, id: 1 });
-      }
-
-      return await this.wifiRepo.findOne({ where: { id: 1 } });
-    } catch (error) {
-      return { message: 'Erro ao atualizar as credenciais', error };
-    }
+  async post(@Body() body: { ssid: string; password: string }) {
+    await this.wifiRepo.upsert({ id: 1, ...body }, ['id']);
+    return { success: true };
   }
 }

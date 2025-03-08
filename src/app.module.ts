@@ -1,29 +1,20 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { CredentialsController } from './credentials/credentials.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { WifiCredentials } from './credentials/wifi-credentials.entity';
+import { Wifi } from './credentials/wifi-credentials.entity';
+import { WifiController } from './credentials/credentials.controller';
 
 @Module({
   imports: [
     TypeOrmModule.forRoot({
       type: 'postgres',
       url: process.env.DATABASE_URL,
-      ssl: true, 
-      extra: {
-        ssl: {
-          rejectUnauthorized: false,
-        },
-      },
-      entities: [WifiCredentials],
-      synchronize: true, 
-      retryDelay: 3000, 
-      retryAttempts: 5, 
+      ssl: true,
+      extra: { ssl: { rejectUnauthorized: false } },
+      entities: [Wifi],
+      synchronize: true,
     }),
-      TypeOrmModule.forFeature([WifiCredentials])
+    TypeOrmModule.forFeature([Wifi])
   ],
-  controllers: [AppController, CredentialsController],
-  providers: [AppService],
+  controllers: [WifiController],
 })
 export class AppModule {}
