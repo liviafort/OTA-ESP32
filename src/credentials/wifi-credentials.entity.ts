@@ -3,11 +3,11 @@ import { Entity, PrimaryColumn, Column } from 'typeorm';
 @Entity()
 export class WifiCredentials {
   @PrimaryColumn()
-  id: number = 1; 
+  id: number = 1;
 
-  @Column()
+  @Column({ type: 'varchar' })
   ssid: string;
 
-  @Column()
+  @Column({ type: 'varchar' })
   password: string;
 }
