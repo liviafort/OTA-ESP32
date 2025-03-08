@@ -1,13 +1,13 @@
-import { Entity, PrimaryColumn, Column } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
 @Entity()
 export class WifiCredentials {
-  @PrimaryColumn()
-  id: number = 1;
+  @PrimaryGeneratedColumn()
+  id: number; 
 
-  @Column({ type: 'varchar' })
+  @Column()
   ssid: string;
 
-  @Column({ type: 'varchar' })
+  @Column()
   password: string;
 }
