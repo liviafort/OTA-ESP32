@@ -8,6 +8,4 @@ export class Firmware {
   @Column()
   firmware_url: string; 
   
-  @Column()
-  selected_firmware: number; 
 }

@@ -1,9 +1,10 @@
-import { Body, Controller, Get, Patch } from '@nestjs/common';
+import { Body, Controller, Get, Patch, Post } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as fs from 'fs';
 import * as path from 'path';
 import { Firmware } from './firmware.entity';
 import { Repository } from 'typeorm';
+import { Selected_Firmware } from 'src/selected_firmware/selected-firmware.entity';
 
 @Controller('firmware')
 export class FirmwareController {
@@ -11,17 +12,25 @@ export class FirmwareController {
   constructor(
     @InjectRepository(Firmware)
     private readonly firmwareRepo: Repository<Firmware>,
+    @InjectRepository(Selected_Firmware)
+    private readonly selectedFirmwareRepo: Repository<Selected_Firmware>
   ) {}
 
   @Get()
   async get() {
-    const firmware = await this.firmwareRepo.findOne({ where: { selected_firmware: 1 } });
-    return firmware || { firmware_url: '', selected_firmware: 1 };
+    const selectedFirmware = await this.selectedFirmwareRepo.findOne({ where: { id: 1 } });
+    
+    if (selectedFirmware) {
+      const firmware = await this.firmwareRepo.findOne({ where: { id: selectedFirmware.selected_firmware } });
+      return firmware || { firmware_url: '', selected_firmware: selectedFirmware.selected_firmware };
+    }
+    
+    return { success: false, message: "No selected firmware" };
   }
 
   @Patch()
   async patch(@Body() body: { firmware_url: string, selected_firmware: number }) {
-    const firmware = await this.firmwareRepo.findOne({ where: { selected_firmware: body.selected_firmware } });
+    const firmware = await this.firmwareRepo.findOne({ where: { id: body.selected_firmware } });
 
     if (firmware) {
       firmware.firmware_url = body.firmware_url;
@@ -30,6 +39,14 @@ export class FirmwareController {
     }
 
     return { success: false, message: "Firmware não encontrado!" };
+  }
+
+  @Post()
+  async post(@Body() body: { firmware_url: string }) {
+    const firmware = new Firmware();
+    firmware.firmware_url = body.firmware_url;
+    await this.firmwareRepo.save(firmware);
+    return { success: true, firmware };
   }
 
   @Get('v1')
@@ -45,4 +62,5 @@ export class FirmwareController {
     const firmware = fs.readFileSync(firmwarePath);
     return firmware;
   }
+
 }
