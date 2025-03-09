@@ -51,16 +51,26 @@ export class FirmwareController {
 
   @Get('v1')
   async getFirmwareV1() {
-    const firmwarePath = path.resolve(__dirname, 'path/to/esp32/esp32_firmware_v1.bin');
-    const firmware = fs.readFileSync(firmwarePath);
-    return firmware;
+    const firmwarePath = path.resolve(__dirname, '../esp32/esp32_firmware_v1.bin');
+    try {
+      const firmware = fs.readFileSync(firmwarePath);
+      return firmware;
+    } catch (error) {
+      console.error('Erro ao ler o arquivo:', error);
+      throw new Error('Erro ao carregar o firmware v1');
+    }
   }
 
   @Get('v2')
   async getFirmwareV2() {
-    const firmwarePath = path.resolve(__dirname, 'path/to/esp32/esp32_firmware_v2.bin');
-    const firmware = fs.readFileSync(firmwarePath);
-    return firmware;
+    const firmwarePath = path.resolve(__dirname, '../esp32/esp32_firmware_v2.bin');
+    try {
+      const firmware = fs.readFileSync(firmwarePath);
+      return firmware;
+    } catch (error) {
+      console.error('Erro ao ler o arquivo:', error);
+      throw new Error('Erro ao carregar o firmware v2');
+    }
   }
 
 }
