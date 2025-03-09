@@ -12,7 +12,7 @@ import { Selected_Firmware } from './selected_firmware/selected-firmware.entity'
 @Module({
   imports: [
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', 'esp32'),
+      rootPath: join(__dirname, 'esp32'),
       serveRoot: '/esp32',
     }),
     TypeOrmModule.forRoot({
