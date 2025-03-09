@@ -1,7 +1,7 @@
-import { Body, Controller, Get, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Get, Patch, Post, Res } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as fs from 'fs';
-import * as path from 'path';
+import { Response } from 'express';
 import { Firmware } from './firmware.entity';
 import { Repository } from 'typeorm';
 import { Selected_Firmware } from 'src/selected_firmware/selected-firmware.entity';
@@ -50,10 +50,12 @@ export class FirmwareController {
   }
 
   @Get('v1')
-  async getFirmwareV1() {
+  async getFirmwareV1(@Res() res: Response) {
     try {
       const firmware = fs.readFileSync('esp32/esp32_firmware_v1.bin');
-      return firmware;
+      res.setHeader('Content-Type', 'application/octet-stream');
+      res.setHeader('Content-Disposition', 'attachment; filename=esp32_firmware_v1.bin');
+      return res.send(firmware);
     } catch (error) {
       console.error('Erro ao ler o arquivo:', error);
       throw new Error('Erro ao carregar o firmware v1');
@@ -61,10 +63,12 @@ export class FirmwareController {
   }
 
   @Get('v2')
-  async getFirmwareV2() {
+  async getFirmwareV2(@Res() res: Response) {
     try {
       const firmware = fs.readFileSync('esp32/esp32_firmware_v2.bin');
-      return firmware;
+      res.setHeader('Content-Type', 'application/octet-stream');
+      res.setHeader('Content-Disposition', 'attachment; filename=esp32_firmware_v2.bin');
+      return res.send(firmware);
     } catch (error) {
       console.error('Erro ao ler o arquivo:', error);
       throw new Error('Erro ao carregar o firmware v2');
