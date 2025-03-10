@@ -28,19 +28,6 @@ export class FirmwareController {
     return { success: false, message: "No selected firmware" };
   }
 
-  @Patch('/atualiza')
-  async patch(@Body() body: { firmware_url: string, selected_firmware: number }) {
-    const firmware = await this.firmwareRepo.findOne({ where: { id: body.selected_firmware } });
-
-    if (firmware) {
-      firmware.firmware_url = body.firmware_url;
-      await this.firmwareRepo.save(firmware);
-      return { success: true };
-    }
-
-    return { success: false, message: "Firmware não encontrado!" };
-  }
-
   @Post('/envio')
   async posturl(@Body() body: { firmware_url: string }) {
     const firmware = new Firmware();
