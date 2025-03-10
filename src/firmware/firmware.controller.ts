@@ -16,7 +16,7 @@ export class FirmwareController {
     private readonly selectedFirmwareRepo: Repository<Selected_Firmware>
   ) {}
 
-  @Get('recebe')
+  @Get('/recebe')
   async get() {
     const selectedFirmware = await this.selectedFirmwareRepo.findOne({ where: { id: 1 } });
     
@@ -28,7 +28,7 @@ export class FirmwareController {
     return { success: false, message: "No selected firmware" };
   }
 
-  @Patch('atualiza')
+  @Patch('/atualiza')
   async patch(@Body() body: { firmware_url: string, selected_firmware: number }) {
     const firmware = await this.firmwareRepo.findOne({ where: { id: body.selected_firmware } });
 
@@ -41,8 +41,8 @@ export class FirmwareController {
     return { success: false, message: "Firmware não encontrado!" };
   }
 
-  @Post('envio')
-  async post(@Body() body: { firmware_url: string }) {
+  @Post('/envio')
+  async posturl(@Body() body: { firmware_url: string }) {
     const firmware = new Firmware();
     firmware.firmware_url = body.firmware_url;
     await this.firmwareRepo.save(firmware);
