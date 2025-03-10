@@ -10,7 +10,7 @@ export class SelectedFirmwareController {
     private readonly selectedFirmwareRepo: Repository<Selected_Firmware>,
   ) {}
 
-  @Patch()
+  @Patch('atualiza')
   async patch(@Body() body: { selected_firmware: number }) {
     const selectedFirmware = await this.selectedFirmwareRepo.findOne({ where: { id: 1 } });
 
