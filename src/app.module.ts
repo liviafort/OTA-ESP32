@@ -20,7 +20,7 @@ import { Selected_Firmware } from './selected_firmware/selected-firmware.entity'
       url: process.env.DATABASE_URL,
       ssl: true,
       extra: { ssl: { rejectUnauthorized: false } },
-      entities: [Wifi],
+      entities: [Wifi, Firmware, Selected_Firmware],
       synchronize: true,
     }),
     TypeOrmModule.forFeature([Wifi, Firmware, Selected_Firmware])
