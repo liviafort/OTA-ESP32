@@ -2,12 +2,8 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Wifi } from './credentials/wifi-credentials.entity';
 import { WifiController } from './credentials/credentials.controller';
-import { FirmwareController } from './firmware/firmware.controller';
 import { join } from 'path';
 import { ServeStaticModule } from '@nestjs/serve-static';
-import { Firmware } from './firmware/firmware.entity';
-import { SelectedFirmwareController } from './selected_firmware/selected_firmware.controller';
-import { Selected_Firmware } from './selected_firmware/selected-firmware.entity';
 
 @Module({
   imports: [
@@ -20,11 +16,11 @@ import { Selected_Firmware } from './selected_firmware/selected-firmware.entity'
       url: process.env.DATABASE_URL,
       ssl: true,
       extra: { ssl: { rejectUnauthorized: false } },
-      entities: [Wifi, Firmware, Selected_Firmware],
+      entities: [Wifi],
       synchronize: true,
     }),
-    TypeOrmModule.forFeature([Wifi, Firmware, Selected_Firmware])
+    TypeOrmModule.forFeature([Wifi])
   ],
-  controllers: [WifiController, FirmwareController, SelectedFirmwareController],
+  controllers: [WifiController],
 })
 export class AppModule {}
